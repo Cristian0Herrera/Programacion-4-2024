@@ -39,7 +39,7 @@ table {
     <div class="container-fluid">
         <div id="app">
             <div class="row">
-                <div class="col text-center"><h1> SISTEMA DE PERSONAS</h1><br><br></div>
+                <div class="col text-center"><h1> AUTOR</h1><br><br></div>
             </div>
 
             
@@ -48,6 +48,13 @@ table {
             <div class="row">
                 <div class="col">
                     <div class="mx-auto" style="width: 100%;">
+
+                        <div class="row p-1">
+                            <div class="col-md-2">ID AUTOR</div>
+                            <div class="col-md-2">
+                                <input v-model="persona.id" type="text" class="form-control">
+                            </div>
+                        </div>
                     <div class="row p-1">
                         <div class="col-md-2">CÓDIGO</div>
                         <div class="col-md-2">
@@ -61,44 +68,21 @@ table {
                         </div>
                     </div>
                     <div class="row p-1">
-                        <div class="col-md-2">DIRECCIÓN</div>
+                        <div class="col-md-2">PAIS</div>
                         <div class="col-md-3">
-                            <input v-model="persona.direccion" type="text" class="form-control">
+                            <input v-model="persona.pais" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="row p-1">
-                        <div class="col-md-2">MUNICIPIO</div>
+                        <div class="col-md-2">TELEFONO</div>
                         <div class="col-md-3">
-                            <input v-model="persona.municipio" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row p-1">
-                        <div class="col-md-2">DEPARTAMENTO</div>
-                        <div class="col-md-3">
-                            <input v-model="persona.departamento" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row p-1">
-                        <div class="col-md-2">TELÉFONO</div>
-                        <div class="col-md-2">
                             <input v-model="persona.telefono" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="row p-1">
-                        <div class="col-md-2">FECHA DE NACIMIENTO</div>
-                        <div class="col-md-2">
-                            <input v-model="persona.fechaNacimiento" type="date" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row p-1">
-                        <div class="col-md-2">SEXO</div>
-                        <div class="col-md-2">
-                            <select v-model="persona.sexo" class="form-control">
-                                <option value="masculino">MASCULINO</option>
-                                <option value="femenino">FEMENINO</option>
-                            </select>
-                        </div>
-                    </div>
+                  
+                   
+                    
+
                     <div class="row p-1">
                         <div class="col">
                             <button @click.prevent="guardarPersona" class="btn btn-success">GUARDAR</button>
@@ -118,33 +102,27 @@ table {
                                 <tr>
                                     <th>BUSCAR</th>
                                     <th colspan="8">
-                                        <input placeholder="código, nombre, dirección, municipio, departamento, teléfono, fecha de nacimiento, sexo" type="search"
+                                        <input placeholder="código, nombre, pasi, telefono" type="search"
                                             v-model="valor" @keyup="buscarPersona" class="form-control">
                                     </th>
                                 </tr>
                                 <tr>
+                                    <th>ID AUTOR</th>
                                     <th>CÓDIGO</th>
                                     <th>NOMBRE</th>
-                                    <th>DIRECCIÓN</th>
-                                    <th>MUNICIPIO</th>
-                                    <th>DEPARTAMENTO</th>
-                                    <th>TELÉFONO</th>
-                                    <th>FECHA DE NACIMIENTO</th>
-                                    <th>SEXO</th>
+                                    <th>PAIS</th>
+                                    <th>TELEFONO</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr @click="modificarPersona(persona)" v-for="persona in personas"
                                     :key="persona.idPersona">
+                                    <td>{{persona.id}}</td>
                                     <td>{{persona.codigo}}</td>
                                     <td>{{persona.nombre}}</td>
-                                    <td>{{persona.direccion}}</td>
-                                    <td>{{persona.municipio}}</td>
-                                    <td>{{persona.departamento}}</td>
+                                    <td>{{persona.pais}}</td>
                                     <td>{{persona.telefono}}</td>
-                                    <td>{{persona.fechaNacimiento}}</td>
-                                    <td>{{persona.sexo}}</td>
                                     <td><button @click.prevent="eliminarPersona(persona.idPersona)"
                                             class="btn btn-danger">eliminar</button></td>
                                 </tr>
@@ -155,6 +133,8 @@ table {
             </div>
         </div>
     </div>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
     <script src="db.js"></script>
@@ -167,14 +147,12 @@ table {
                 accion: 'nuevo',
                 persona: {
                     idPersona: new Date().getTime(),
+                    id: '',
                     codigo: '',
                     nombre: '',
-                    direccion: '',
-                    municipio: '',
-                    departamento: '',
+                    pais: '',
                     telefono: '',
-                    fechaNacimiento: '',
-                    sexo: ''
+                    
                 }
             },
             methods: {
@@ -189,20 +167,17 @@ table {
 
                         data.onsuccess = (resp) => {
                             this.personas = data.result.filter(persona =>
-                                persona.codigo.includes(this.valor) ||
+                                persona.id.includes(this.valor) ||
+                                persona.codigo.toLowerCase().includes(this.valor.toLowerCase()) ||
                                 persona.nombre.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.direccion.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.municipio.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.departamento.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.telefono.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.fechaNacimiento.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.sexo.toLowerCase().includes(this.valor.toLowerCase())
+                                persona.pais.toLowerCase().includes(this.valor.toLowerCase()) ||
+                                persona.telefono.toLowerCase().includes(this.valor.toLowerCase()) 
                             );
                         };
                     }
                 },
                 eliminarPersona(idPersona) {
-                    if (confirm(`¿Está seguro de eliminar la persona?`)) {
+                    if (confirm(`¿Está seguro de eliminar al autor?`)) {
                         let store = abrirStore('personas', 'readwrite');
                         let query = store.delete(idPersona);
 
@@ -233,7 +208,7 @@ table {
                 };
 
                 query.onerror = (e) => {
-                    console.error('Error al guardar en personas', e.target.error);
+                    console.error('Error al guardar al guardar el autor', e.target.error);
                 };
             },
 
@@ -241,14 +216,11 @@ table {
                     this.accion = 'nuevo';
                     this.persona = {
                         idPersona: new Date().getTime(),
+                        id: '',
                         codigo: '',
                         nombre: '',
-                        direccion: '',
-                        municipio: '',
-                        departamento: '',
+                        pais: '',
                         telefono: '',
-                        fechaNacimiento: '',
-                        sexo: ''
                     }
                 },
                 listarPersonas() {
@@ -257,13 +229,11 @@ table {
                     data.onsuccess = resp => {
                         this.personas = data.result
                             .filter(persona => persona.codigo.includes(this.valor) ||
+                                persona.id.toLowerCase().includes(this.valor.toLowerCase()) ||
+                                persona.codigo.toLowerCase().includes(this.valor.toLowerCase()) ||
                                 persona.nombre.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.direccion.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.municipio.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.departamento.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.telefono.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.fechaNacimiento.toLowerCase().includes(this.valor.toLowerCase()) ||
-                                persona.sexo.toLowerCase().includes(this.valor.toLowerCase()));
+                                persona.pais.toLowerCase().includes(this.valor.toLowerCase()) ||
+                                persona.telefono.toLowerCase().includes(this.valor.toLowerCase()));
                     };
                 }
             },
@@ -271,7 +241,228 @@ table {
                 //this.listarPersonas();
             }
         })
+
+
+        
     </script>
+
+<div class="row">
+    <div class="col text-center"><h1> LIBROS</h1><br><br></div>
+</div>
+        <!-- Formulario -->
+        <div class="row margin-top 10px">
+            <div class="col">
+                <div class="mx-auto" style="width: 100%;">
+
+                    <div class="row p-1">
+                        <div class="col-md-2">ID LIBRO</div>
+                        <div class="col-md-2">
+                            <input v-model="persona.id" type="text" class="form-control">
+                        </div>
+                    </div>
+                <div class="row p-1">
+                    <div class="col-md-2">AUTOR</div>
+                    <div class="col-md-2">
+                        <input v-model="persona.autor" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-md-2">LSBN</div>
+                    <div class="col-md-3">
+                        <input v-model="persona.lsbn" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-md-2">TITULO</div>
+                    <div class="col-md-3">
+                        <input v-model="persona.titulo" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-md-2">EDITORIAL</div>
+                    <div class="col-md-3">
+                        <input v-model="persona.editorial" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row p-1">
+                    <div class="col-md-2">EDICION</div>
+                    <div class="col-md-3">
+                        <input v-model="persona.edicion" type="text" class="form-control">
+                    </div>
+                </div>
+              
+              
+               
+                
+
+                <div class="row p-1">
+                    <div class="col">
+                        <button @click.prevent="guardarPersona" class="btn btn-success">GUARDAR</button>
+                        <button @click.prevent="nuevaPersona" class="btn btn-warning">NUEVO</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+
+        <!-- Tabla -->
+        <div class="row">
+            <div class="col">
+                <form id="frmPersona">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>BUSCAR</th>
+                                <th colspan="8">
+                                    <input placeholder="código, nombre, pasi, telefono" type="search"
+                                        v-model="valor" @keyup="buscarPersona" class="form-control">
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>ID LIBRO</th>
+                                <th>AUTOR</th>
+                                <th>LSBN</th>
+                                <th>TITULO</th>
+                                <th>EDITORIAL</th>
+                                <th>EDICION</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr @click="modificarPersona(persona)" v-for="persona in personas"
+                                :key="persona.idPersona">
+                                <td>{{persona.id}}</td>
+                                <td>{{persona.autor}}</td>
+                                <td>{{persona.lsbn}}</td>
+                                <td>{{persona.titulo}}</td>
+                                <td>{{persona.editorial}}</td>
+                                <td>{{persona.edicion}}</td>
+                                <td><button @click.prevent="eliminarPersona(persona.idPersona)"
+                                        class="btn btn-danger">eliminar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+<script src="db.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            valor: '',
+            personas: [],
+            accion: 'nuevo',
+            persona: {
+                idPersona: new Date().getTime(),
+                id: '',
+                autor: '',
+                lsbn: '',
+                titulo: '',
+                editorial: '',
+                edicion: '',
+                
+            }
+        },
+        methods: {
+            buscarPersona() {
+                if (this.valor.trim() === '') {
+                    // Si la barra de búsqueda está vacía, cargar todos los productos
+                    this.listarPersonas();
+                } else {
+                    // Si hay texto en la barra de búsqueda, realizar la búsqueda
+                    let store = abrirStore('personas', 'readonly');
+                    let data = store.getAll();
+
+                    data.onsuccess = (resp) => {
+                        this.personas = data.result.filter(persona =>
+                            persona.id.includes(this.valor) ||
+                            persona.autor.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.lsbn.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.titulo.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.editorial.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.edicion.toLowerCase().includes(this.valor.toLowerCase()) 
+                        );
+                    };
+                }
+            },
+            eliminarPersona(idPersona) {
+                if (confirm(`¿Está seguro de eliminar al autor?`)) {
+                    let store = abrirStore('personas', 'readwrite');
+                    let query = store.delete(idPersona);
+
+                    query.onsuccess = (e) => {
+                        // Filtrar la lista para excluir la persona eliminada
+                        this.personas = this.personas.filter(persona => persona.idPersona !== idPersona);
+                        // Reiniciar el objeto persona solo si la persona eliminada es igual a la actual
+                        if (this.persona.idPersona === idPersona) {
+                            this.nuevaPersona();
+                        }
+                    };
+                }
+            },
+            modificarPersona(persona) {
+                this.accion = 'modificar';
+                this.persona = persona;
+            },
+            guardarPersona() {
+            let store = abrirStore('personas', 'readwrite');
+            let query = store.put({ ...this.persona });
+
+            query.onsuccess = (e) => {
+                // Agregar directamente a la lista de personas
+                this.personas.push({ ...this.persona });
+                
+                // Reiniciar el objeto persona
+                this.nuevaPersona();
+            };
+
+            query.onerror = (e) => {
+                console.error('Error al guardar al guardar el autor', e.target.error);
+            };
+        },
+
+            nuevaPersona() {
+                this.accion = 'nuevo';
+                this.persona = {
+                    idPersona: new Date().getTime(),
+                    id: '',
+                    autor: '',
+                    lsbn: '',
+                    titulo: '',
+                    editorial: '',
+                    edicion: '',
+                
+                }
+            },
+            listarPersonas() {
+                let store = abrirStore('personas', 'readonly'),
+                    data = store.getAll();
+                data.onsuccess = resp => {
+                    this.personas = data.result
+                        .filter(persona => persona.codigo.includes(this.valor) ||
+                            persona.id.includes(this.valor) ||
+                            persona.autor.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.lsbn.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.titulo.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.editorial.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            persona.edicion.toLowerCase().includes(this.valor.toLowerCase()) );
+                };
+            }
+        },
+        created() {
+            //this.listarPersonas();
+        }
+    })
+
+
+    
+</script>
 </body>
 
 </html>

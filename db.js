@@ -1,7 +1,17 @@
 var db;
 
 const initDB = () => {
-    let indexDB = indexedDB.open('db_sistema', 1);
+    let indexDB = indexedDB.open('db_108822_cristian', 1);
+
+    indexDB.onupgradeneeded = e => {
+        let req = e.target.result;
+
+        if (!req.objectStoreNames.contains('autor')) {
+            let tblPersona = req.createObjectStore('autar', { keyPath: 'idPersona' });
+            tblPersona.createIndex('autro', 'autor', { unique: true });
+            tblPersona.createIndex('codigo', 'codigo', { unique: true });
+        }
+    };
 
     indexDB.onupgradeneeded = e => {
         let req = e.target.result;
